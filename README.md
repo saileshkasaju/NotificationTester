@@ -32,6 +32,17 @@ Run instructions for Windows and macOS:
   ![setup instructions](https://www.gstatic.com/mobilesdk/160426_mobilesdk/images/xcode_project_panel@2x.png 'Instructions for Xcode')
 - update the bundle identifier in the `General` tab of project in Xcode.
 
+### add android app in the newly created firebase project.
+
+- we need to specify the package name, here from `android/app/src/main/AndroidManifest.xml` in my case `com.notificationtester`
+- Download the config file `google-services.json`
+- Switch to the Project view in Android Studio to see your project root directory.
+- Move the google-services.json file you just downloaded into your Android app module root directory.
+  ![setup instructions](https://www.gstatic.com/mobilesdk/160426_mobilesdk/images/android_studio_project_panel@2x.png 'Instructions for Xcode')
+- update the bundle identifier in the `General` tab of project in Xcode.
+
+## Step 2:
+
 #### Configure Firebase with iOS credentials
 
 open `/ios/{projectName}/AppDelegate.m` file, and add the following to the top of the file:
