@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -23,8 +23,47 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import messaging from '@react-native-firebase/messaging';
 
-const App: () => React$Node = () => {
+const App = () => {
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    return authStatus;
+  };
+  useEffect(() => {
+    requestUserPermission().then((res) => {
+      if (res) {
+        console.log(res, 'listening');
+        const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+          console.log(
+            'A new FCM message arrived!',
+            JSON.stringify(remoteMessage),
+          );
+        });
+        return unsubscribe;
+      }
+    });
+  }, []);
+  useEffect(() => {
+    // Get the device token
+    messaging()
+      .getToken()
+      .then((token) => {
+        // return saveTokenToDatabase(token);
+        console.log(token, 'fcm token');
+        return null;
+      });
+
+    // If using other push notification providers (ie Amazon SNS, etc)
+    // you may need to get the APNs token instead for iOS:
+    // if(Platform.OS == 'ios') { messaging().getAPNSToken().then(token => { return saveTokenToDatabase(token); }); }
+
+    // Listen to whether the token changes
+    return messaging().onTokenRefresh((token) => {
+      // saveTokenToDatabase(token);
+      console.log('new token', token);
+    });
+  }, []);
   return (
     <>
       <StatusBar barStyle="dark-content" />
